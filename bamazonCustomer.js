@@ -59,7 +59,6 @@ function afterConnection() {
         console.log("Your num choice: " + chosenQuantity);
         for(var i=0; i < results.length; i++) {
             if (chosenItem === results[i].item_id) {
-                // console.log("Your item: " + results.item_id[i])
                 updateQuantity(results[i]);
             }
 
@@ -76,16 +75,15 @@ function afterConnection() {
         console.log("--------------------------------------------");
         newQuantity = chosenProduct.stock_quantity - chosenQuantity;
         if (chosenQuantity <= chosenProduct.stock_quantity) {
-            // bid was high enough, so update db, let the user know, and start over
          console.log("You can totally buy this!");
         "UPDATE products SET ? WHERE ?",
             [
                 {
-                    item_id: chosenItem
+                    stock_quantity: newQuantity
                   },
                   {
-                    stock_quantity: newQuantity
-                  }
+                    item_id: chosenItem                 
+                }
             ],
             function(error, res) {
                 console.log(res.affectedRows + " Songs updated!\n");
@@ -96,10 +94,10 @@ function afterConnection() {
                 console.log("--------------------------------------------");
                 console.log("Thanks for shopping at Shane's Bamazon! See you next time!")
                 console.log("--------------------------------------------");
+                console.log(newQuantity);
                 connection.end();       
          }
           else {
-            // bid wasn't high enough, so apologize and start over
             console.log("I'm sorry, we'll have to order more...");
             afterConnection();
            
