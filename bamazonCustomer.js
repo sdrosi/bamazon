@@ -64,10 +64,10 @@ function afterConnection() {
 
         }
     })})};
-
+  
     function updateQuantity(chosenProduct) {
         var query = connection.query("SELECT * FROM products", function(err, result) {
-        if (err) throw err;
+        if (err) {throw err;}
         console.log("--------------------------------------------");
         console.log("Your item: " + JSON.stringify(chosenProduct.product_name));
         console.log("The price: $" + JSON.stringify(chosenProduct.price));
@@ -75,34 +75,75 @@ function afterConnection() {
         console.log("--------------------------------------------");
         newQuantity = chosenProduct.stock_quantity - chosenQuantity;
         if (chosenQuantity <= chosenProduct.stock_quantity) {
-         console.log("You can totally buy this!");
-        "UPDATE products SET ? WHERE ?",
-            [
-                {
-                    stock_quantity: newQuantity
-                  },
-                  {
-                    item_id: chosenItem                 
-                }
-            ],
-            function(error, res) {
-                console.log(res.affectedRows + " Songs updated!\n");
-                console.log(error);
-                if (error) throw err}
-                console.log("--------------------------------------------");
-                console.log("You just spent $" + (chosenQuantity * chosenProduct.price) + " on " + chosenQuantity + " " + chosenProduct.product_name +"(s) !");
-                console.log("--------------------------------------------");
-                console.log("Thanks for shopping at Shane's Bamazon! See you next time!")
-                console.log("--------------------------------------------");
-                console.log(newQuantity);
-                connection.end();       
-         }
-          else {
+        console.log("You can totally buy this!");
+        connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?", [newQuantity,chosenItem],
+          function(error, res) {
+            if (error) throw err
+            console.log("--------------------------------------------");
+            console.log("You just spent $" + (chosenQuantity * chosenProduct.price) + " on " + chosenQuantity + " " + chosenProduct.product_name +"(s) !");
+            console.log("--------------------------------------------");
+            console.log("Thanks for shopping at Shane's Bamazon! See you next time!")
+            console.log("--------------------------------------------");
+            connection.end();
+           })
+         }else {
             console.log("I'm sorry, we'll have to order more...");
             afterConnection();
-           
-          }
+         }
         });
-    };
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // function updateQuantity(chosenProduct) {
+    //     var query = connection.query("SELECT * FROM products", function(err, result) {
+
+
+    //     if (err) throw err;
+    //     console.log("--------------------------------------------");
+    //     console.log("Your item: " + JSON.stringify(chosenProduct.product_name));
+    //     console.log("The price: $" + JSON.stringify(chosenProduct.price));
+    //     console.log("In stock: " + JSON.stringify(chosenProduct.stock_quantity));
+    //     console.log("--------------------------------------------");
+    //     newQuantity = chosenProduct.stock_quantity - chosenQuantity;
+
+
+    //     else if (chosenQuantity <= chosenProduct.stock_quantity) {
+    //      console.log("You can totally buy this!");
+            
+    //      connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?",
+    //      [newQuantity, chosenItem],
+    //         function(error, res) {
+    //             console.log(res.affectedRows + " Songs updated!\n");
+    //             console.log(error);
+    //             if (error) throw err
+    //         }
+    //             console.log("--------------------------------------------");
+    //             console.log("You just spent $" + (chosenQuantity * chosenProduct.price) + " on " + chosenQuantity + " " + chosenProduct.product_name +"(s) !");
+    //             console.log("--------------------------------------------");
+    //             console.log("Thanks for shopping at Shane's Bamazon! See you next time!")
+    //             console.log("--------------------------------------------");
+    //             console.log(newQuantity);
+    //             connection.end();       
+    //     )}
+    //       else if {
+    //         console.log("I'm sorry, we'll have to order more...");
+    //         afterConnection();
+           
+    //       })}
+    //     ;
+    
 
   
